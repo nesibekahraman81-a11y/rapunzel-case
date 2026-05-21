@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapunzel Çocuk Kitabı - Nesibe Kahraman</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&family=Source+Sans+Pro:wght@600&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        :root { 
+            --bg-color: #0b1517;
+            --text-color: #ffffff; 
+
+            --font-title: 'Lora', serif; 
+            --font-body: 'Source Sans Pro', sans-serif; 
+
+            --fs-hero-title: clamp(2.8rem, 4vw, 4.2rem);
+            --fs-section-title: clamp(2rem, 2.6vw, 2.6rem);
+            --fs-body: 1.08rem;
+            --fs-caption: 0.98rem;
+            --fs-click: 0.9rem;
+
+            --lh-title: 1.12;
+            --lh-body: 1.55;
+            --lh-caption: 1.45;
+
+            --tracking-title: -0.02em;
+            --tracking-click: 0.35em;
+        }
+        
+        html { 
+            scroll-snap-type: y mandatory; 
+            scroll-behavior: smooth; 
+        }
+        
+        body { 
+            background: var(--bg-color);
+            color: var(--text-color); 
+            font-family: var(--font-body); 
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .gradient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 13% 22%, rgba(42, 165, 170, 0.26), transparent 34%),
+                radial-gradient(circle at 82% 24%, rgba(56, 105, 190, 0.24), transparent 36%),
+                radial-gradient(circle at 28% 78%, rgba(92, 150, 118, 0.18), transparent 38%),
+                radial-gradient(circle at 74% 76%, rgba(220, 172, 92, 0.20), transparent 36%),
+                radial-gradient(circle at 54% 55%, rgba(142, 102, 190, 0.16), transparent 34%),
+                radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.045), transparent 30%),
+                linear-gradient(135deg, #0b1517 0%, #102126 36%, #172439 68%, #11110e 100%);
+        }
+
+        .blur-layer {
+            position: fixed;
+            inset: -30%;
+            z-index: 1;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 22% 30%, rgba(70, 190, 180, 0.12), transparent 36%),
+                radial-gradient(circle at 76% 35%, rgba(80, 130, 220, 0.11), transparent 38%),
+                radial-gradient(circle at 42% 76%, rgba(110, 175, 125, 0.09), transparent 40%),
+                radial-gradient(circle at 70% 72%, rgba(235, 184, 92, 0.11), transparent 38%),
+                radial-gradient(circle at 50% 55%, rgba(155, 110, 220, 0.10), transparent 36%);
+            filter: blur(90px);
+            opacity: 0.9;
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.085;
+            mix-blend-mode: soft-light;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.55'/%3E%3C/svg%3E");
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at center, transparent 48%, rgba(0, 0, 0, 0.34) 100%);
+        }
+
+        .text-block {
+            max-width: 520px;
+        }
+
+        .hero-meta {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.48;
+            margin-bottom: 14px;
+        }
+
+        .hero-title {
+            font-family: var(--font-title);
+            font-size: var(--fs-hero-title);
+            line-height: var(--lh-title);
+            letter-spacing: var(--tracking-title);
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .project-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 520px;
+            margin-top: 6px;
+        }
+
+        .project-summary p {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            line-height: 1.45;
+            font-weight: 600;
+            opacity: 0.82;
+        }
+
+        .project-summary span {
+            opacity: 0.48;
+            margin-right: 6px;
+        }
+
+        .text-title,
+        .section-title {
+            font-family: var(--font-title);
+            font-size: var(--fs-section-title);
+            line-height: var(--lh-title);
+            letter-spacing: var(--tracking-title);
+            font-weight: 700;
+        }
+
+        .text-body,
+        .text-list li,
+        .numbered-list li,
+        a {
+            font-family: var(--font-body);
+            font-size: var(--fs-body);
+            line-height: var(--lh-body);
+            font-weight: 600;
+        }
+
+        .text-body {
+            max-width: 500px;
+        }
+
+        .text-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .feature-item {
+            display: inline-block;
+            transform-origin: left center;
+            transition: transform 0.35s ease, opacity 0.35s ease, padding-left 0.35s ease;
+        }
+
+        .features-list.has-active .feature-item {
+            opacity: 0.48;
+        }
+
+        .features-list.has-active .feature-item.is-feature-active {
+            transform: scale(1.18);
+            opacity: 1;
+            padding-left: 10px;
+        }
+
+        .numbered-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .caption-text,
+        .process-desc {
+            font-family: var(--font-body);
+            font-size: var(--fs-caption);
+            line-height: var(--lh-caption);
+            font-weight: 600;
+        }
+
+        a { 
+            color: var(--text-color); 
+            text-decoration: underline; 
+            transition: opacity 0.3s; 
+        }
+
+        a:hover { 
+            opacity: 0.7; 
+        }
+
+        section { 
+            height: 100dvh; 
+            width: 100vw; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            overflow: hidden; 
+            scroll-snap-align: start; 
+            scroll-snap-stop: always;
+            z-index: 5;
+        }
+
+        .avatar { 
+            position: absolute; 
+            bottom: 30px; 
+            right: 40px; 
+            width: auto; 
+            max-height: 18vh; 
+            z-index: 10; 
+            opacity: 0.8; 
+        }
+
+        .click-hint { 
+            position: absolute; 
+            bottom: 80px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-family: var(--font-body);
+            font-size: var(--fs-click);
+            letter-spacing: var(--tracking-click); 
+            font-weight: 600; 
+            opacity: 0.7; 
+            z-index: 50; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .click-hint.is-hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .reset-btn {
+            position: absolute;
+            left: 50%;
+            bottom: 34px;
+            transform: translateX(-50%);
+            z-index: 120;
+            font-family: var(--font-body);
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            color: #fff;
+            background: transparent;
+            border: none;
+            border-radius: 16px;
+            padding: 10px 18px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            text-shadow:
+                0 0 12px rgba(255, 255, 255, 0.18),
+                0 8px 20px rgba(0, 0, 0, 0.42);
+            box-shadow:
+                0 18px 42px rgba(0, 0, 0, 0.24),
+                inset 0 0 18px rgba(0, 0, 0, 0.08);
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-2px);
+            text-shadow:
+                0 0 14px rgba(255, 255, 255, 0.42),
+                0 10px 24px rgba(0, 0, 0, 0.55);
+        }
+
+        .reset-btn.is-visible {
+            opacity: 0.7;
+            visibility: visible;
+        }
+
+        .info-phone-btn {
+            position: absolute;
+            top: 32px;
+            right: 38px;
+            width: 76px;
+            height: 76px;
+            z-index: 150;
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            opacity: 0.72;
+            filter:
+                drop-shadow(0 10px 22px rgba(0, 0, 0, 0.42))
+                drop-shadow(0 0 12px rgba(255, 255, 255, 0.08));
+            animation: phone-shake 2s ease-in-out infinite;
+            transition: opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .info-phone-btn:hover {
+            opacity: 1;
+            transform: scale(1.06);
+            filter:
+                drop-shadow(0 12px 26px rgba(0, 0, 0, 0.55))
+                drop-shadow(0 0 18px rgba(255, 255, 255, 0.16));
+        }
+
+        .info-phone-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+        }
+
+        @keyframes phone-shake {
+            0%, 72%, 100% {
+                transform: rotate(0deg) translateX(0);
+            }
+
+            76% {
+                transform: rotate(-6deg) translateX(-2px);
+            }
+
+            80% {
+                transform: rotate(6deg) translateX(2px);
+            }
+
+            84% {
+                transform: rotate(-5deg) translateX(-2px);
+            }
+
+            88% {
+                transform: rotate(5deg) translateX(2px);
+            }
+
+            92% {
+                transform: rotate(0deg) translateX(0);
+            }
+        }
+
+        .info-popup {
+            position: fixed;
+            top: 120px;
+            right: 38px;
+            width: min(380px, calc(100vw - 76px));
+            z-index: 500;
+            padding: 22px 24px;
+            border-radius: 22px;
+            background: rgba(8, 8, 8, 0.76);
+            backdrop-filter: blur(12px);
+            color: #fff;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-12px) scale(0.98);
+            box-shadow:
+                0 28px 80px rgba(0, 0, 0, 0.42),
+                inset 0 0 28px rgba(255, 255, 255, 0.045);
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+
+        .info-popup.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        .info-popup-title {
+            font-family: var(--font-title);
+            font-size: 1.25rem;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+
+        .info-popup-text {
+            font-family: var(--font-body);
+            font-size: 0.98rem;
+            line-height: 1.5;
+            opacity: 0.86;
+        }
+
+        .info-popup-close {
+            margin-top: 16px;
+            font-family: var(--font-body);
+            font-size: 0.78rem;
+            letter-spacing: 0.18em;
+            font-weight: 600;
+            color: #fff;
+            background: transparent;
+            border: none;
+            opacity: 0.55;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-popup-close:hover {
+            opacity: 1;
+        }
+
+        .hero-content { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 50px; 
+            width: 80%; 
+            z-index: 2; 
+        }
+
+        .hero-img-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45%;
+            max-width: 550px;
+            background: transparent;
+            padding: 25px;
+            border-radius: 18px;
+            border: none;
+            box-shadow:
+                0 18px 50px rgba(0, 0, 0, 0.26),
+                0 6px 18px rgba(0, 0, 0, 0.14),
+                inset 0 0 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-img-wrapper::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            box-shadow:
+                inset 0 0 18px rgba(0, 0, 0, 0.10),
+                0 0 22px rgba(0, 0, 0, 0.08);
+        }
+
+        .hero-project-img { 
+            width: 100%; 
+            height: auto; 
+            border-radius: 10px; 
+            display: block; 
+            position: relative;
+            z-index: 2;
+        }
+
+        #risk-section, 
+        #insight-section { 
+            background: #000; 
+        }
+
+        #problem-start { 
+            cursor: pointer; 
+        }
+
+        .section-title { 
+            position: absolute; 
+            top: 10%; 
+            z-index: 20;
+            text-align: center;
+        }
+
+        #question-mark { 
+            font-family: var(--font-title);
+            font-size: 220px; 
+            line-height: 1;
+        }
+
+        #envelope-stage { 
+            position: absolute; 
+            inset: 0; 
+            display: none; 
+            z-index: 100; 
+        }
+
+        .envelope-container {
+            position: absolute;
+            inset: 0;
+        }
+
+        .envelope-wrapper { 
+            width: 520px; 
+            position: absolute; 
+            left: 50%; 
+            top: 50%; 
+            transform: translate(-50%, -50%); 
+            perspective: 1200px;
+            z-index: 3;
+        }
+
+        .envelope-card { 
+            position: relative; 
+            width: 100%; 
+            cursor: pointer; 
+        }
+
+        .env-face { 
+            width: 100%; 
+            display: block;
+        }
+
+        .env-back { 
+            display: none;
+        }
+
+        #envelope-open-view { 
+            width: 380px; 
+            position: absolute; 
+            opacity: 0; 
+            display: none; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .polaroid-container { 
+            display: flex; 
+            gap: 30px; 
+            width: 90%; 
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        .polaroid-card { 
+            width: 240px; 
+            transition: 0.8s; 
+        }
+
+        .polaroid-card img {
+            width: 100%;
+            display: block;
+        }
+
+        .mid-grow { 
+            transform: scale(1.35); 
+            z-index: 50; 
+        }
+
+        .dim-others { 
+            opacity: 0.3; 
+            transform: scale(0.85); 
+        }
+
+        #risk-section {
+            justify-content: flex-start;
+            padding-left: 12%;
+        }
+
+        .risk-flip-card { 
+            width: 260px; 
+            perspective: 1500px; 
+            position: relative; 
+            z-index: 10; 
+        }
+
+        .risk-flip-inner { 
+            width: 100%; 
+            height: 365px;
+            position: relative; 
+            transform-style: preserve-3d; 
+        }
+
+        .risk-face { 
+            position: absolute; 
+            inset: 0;
+            width: 100%; 
+            height: 100%; 
+            backface-visibility: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .risk-face img {
+            display: block;
+            border-radius: 0;
+        }
+
+        .risk-front img {
+            width: 100%;
+            height: auto;
+        }
+
+        .risk-back { 
+            transform: rotateY(180deg); 
+        }
+
+        .risk-back img {
+            width: 112%;
+            height: auto;
+            max-width: none;
+        }
+
+        .risk-text { 
+            position: absolute; 
+            right: 10%; 
+            width: 35%; 
+            opacity: 0; 
+            transform: translateX(50px); 
+            z-index: 20;
+        }
+
+        .risk-text .text-title,
+        .insight-content .text-title,
+        .features-list .text-title,
+        .thanks-text .text-title {
+            margin-bottom: 18px;
+        }
+
+        .red-flash { 
+            position: absolute; 
+            left: 18%; 
+            top: 50%; 
+            transform: translate(-50%, -50%); 
+            width: 10px; 
+            height: 10px; 
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.45) 0%, rgba(255, 0, 0, 0) 75%); 
+            border-radius: 50%; 
+            opacity: 0; 
+            z-index: 1; 
+            filter: blur(60px); 
+            pointer-events: none; 
+        }
+
+        .insight-content { 
+            position: absolute; 
+            right: 12%; 
+            width: 38%; 
+            opacity: 0; 
+            z-index: 30; 
+            color: #fff; 
+        }
+
+        .flashlight-overlay { 
+            position: absolute; 
+            inset: 0; 
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.3) 0%, rgba(0,0,0,1) 60%); 
+            opacity: 0; 
+            z-index: 20; 
+            pointer-events: none; 
+        }
+
+        #light-btn { 
+            position: absolute; 
+            width: 100px; 
+            height: 100px; 
+            border-radius: 50%; 
+            background: #fff; 
+            color: #000; 
+            font-family: var(--font-body);
+            font-size: var(--fs-click);
+            font-weight: 600; 
+            border: none; 
+            z-index: 100; 
+            cursor: pointer; 
+        }
+
+        #insight-eye { 
+            width: 320px; 
+            opacity: 0; 
+            filter: brightness(0); 
+            z-index: 15; 
+        }
+
+        .process-gallery { 
+            display: flex; 
+            gap: 40px; 
+            justify-content: center; 
+            width: 95%; 
+        }
+
+        .process-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 15px; 
+            width: 30%; 
+        }
+
+        .process-item img { 
+            width: 100%; 
+            border-radius: 10px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+        }
+
+        .process-desc {
+            text-align: center;
+            max-width: 360px;
+        }
+
+        .process-num { 
+            font-family: var(--font-title); 
+            font-size: 1.4rem; 
+            line-height: 1.1;
+            margin-bottom: 6px;
+            color: rgba(255,255,255,0.9); 
+        }
+
+        #features-section { 
+            padding: 0 5%; 
+            justify-content: space-between; 
+        }
+
+        .features-list { 
+            width: 32%; 
+        }
+
+        .mockup-group { 
+            display: flex; 
+            align-items: center; 
+            gap: 60px; 
+            width: 63%; 
+            justify-content: flex-end; 
+        }
+
+        #current-mockup { 
+            width: 520px; 
+            border-radius: 40px; 
+            box-shadow: 0 30px 70px rgba(0,0,0,0.7); 
+        }
+
+        .mockup-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .thumb { 
+            width: 150px; 
+            cursor: pointer; 
+            opacity: 0.4; 
+            transition: 0.3s; 
+            border-radius: 18px; 
+        }
+
+        .thumb.active-thumb { 
+            opacity: 1; 
+            outline: 3px solid #fff; 
+        }
+
+        #thanks-section { 
+            justify-content: space-between; 
+            padding: 0 15%; 
+        }
+
+        .thanks-text { 
+            width: 55%; 
+        }
+
+        .thanks-text .text-body {
+            margin-bottom: 20px;
+        }
+
+        .learned-box {
+            max-width: 620px;
+            margin-bottom: 42px;
+        }
+
+        .learned-box .text-title {
+            margin-bottom: 16px;
+        }
+
+        .learned-box .text-body {
+            max-width: 620px;
+            opacity: 1;
+        }
+
+        .thanks-final-title {
+            max-width: 720px;
+            margin-bottom: 12px;
+        }
+
+        .thanks-final-text {
+            max-width: 620px;
+            opacity: 1;
+        }
+
+        .final-avatar {
+            max-height: 55vh;
+            width: auto;
+            object-fit: contain;
+            z-index: 10;
+        }
+
+        @media (max-width: 900px) {
+            :root {
+                --fs-hero-title: clamp(2.2rem, 9vw, 3rem);
+                --fs-section-title: clamp(1.7rem, 7vw, 2.2rem);
+                --fs-body: 1rem;
+                --fs-caption: 0.92rem;
+            }
+
+            .hero-content,
+            .mockup-group,
+            .process-gallery,
+            .polaroid-container {
+                flex-direction: column;
+            }
+
+            .hero-content {
+                width: 90%;
+                gap: 30px;
+                text-align: center;
+            }
+
+            .hero-img-wrapper,
+            .features-list,
+            .mockup-group,
+            .thanks-text {
+                width: 90%;
+            }
+
+            #features-section,
+            #thanks-section {
+                flex-direction: column;
+                justify-content: center;
+                gap: 40px;
+                padding: 0 5%;
+            }
+
+            #risk-section {
+                justify-content: center;
+                padding-left: 0;
+            }
+
+            #current-mockup {
+                width: 80vw;
+            }
+
+            .mockup-sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .thumb {
+                width: 76px;
+            }
+
+            .features-list.has-active .feature-item.is-feature-active {
+                transform: scale(1.08);
+                padding-left: 0;
+            }
+
+            .risk-text,
+            .insight-content {
+                right: auto;
+                bottom: 14%;
+                width: 80%;
+                text-align: center;
+            }
+
+            .section-title {
+                width: 90%;
+            }
+
+            .envelope-wrapper {
+                width: 78vw;
+            }
+
+            #envelope-open-view {
+                width: 58vw;
+            }
+
+            .info-phone-btn {
+                top: 24px;
+                right: 24px;
+                width: 62px;
+                height: 62px;
+            }
+
+            .info-popup {
+                top: 96px;
+                right: 24px;
+                width: calc(100vw - 48px);
+            }
+
+            .project-summary {
+                align-items: center;
+            }
+
+            .learned-box {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="gradient-bg"></div>
+    <div class="blur-layer"></div>
+    <div class="noise"></div>
+
+    <div class="info-popup" id="info-popup">
+        <h3 class="info-popup-title">Ek Bilgi</h3>
+        <p class="info-popup-text" id="info-popup-text">Buraya ek bilgi gelecek.</p>
+        <button class="info-popup-close" onclick="closeInfo(event)">KAPAT</button>
+    </div>
+
+    <section id="hero">
+        <div class="hero-content">
+            <div class="hero-img-wrapper">
+                <img src="images/proje-kapak.png" class="hero-project-img" alt="Rapunzel Çocuk Kitabı Kapak">
+            </div>
+
+            <div class="hero-text text-block">
+                <p class="hero-meta">1. Sınıf Final Projesi - İnceleme Süresi 1 dakika</p>
+                <h1 class="hero-title">Rapunzel Çocuk Kitabı</h1>
+
+                <div class="project-summary">
+                    <p><span>İçerik:</span> 6-8 yaş çocuklar için yeniden uyarlamış olduğum Rapunzel masalı tasarımı.</p>
+                    <p><span>Hedef Kitle:</span> 6-8 yaş çocuklar</p>
+                    <p><span>Rolüm:</span> Yazar ve çizer</p>
+                </div>
+            </div>
+        </div>
+
+        <img src="images/avatar.png" class="avatar" alt="Avatar">
+    </section>
+
+    <section id="problem-start" onclick="startEvaporation(event)">
+        <button 
+            class="info-phone-btn" 
+            onclick="openInfo(event, this)" 
+            data-info="Klasik Rapunzel anlatısında karakter çoğunlukla kurtarılmayı bekleyen pasif bir figür olarak görülür. Bu projede asıl mesele, masalın temel atmosferini korurken çocuklara daha özgüvenli, kültürel olarak yakın ve karakter odaklı bir hikâye sunmaktı.">
+            <img src="images/tel.png" alt="Ek bilgi telefonu">
+        </button>
+
+        <h2 class="section-title">Problem ve Asıl Problem</h2>
+
+        <div id="q-wrap" style="text-align:center;">
+            <div id="question-mark">?</div>
+        </div>
+
+        <div id="envelope-stage">
+            <div class="envelope-container">
+                <div class="envelope-wrapper" id="env-wrapper">
+                    <div class="envelope-card" id="env-card" onclick="openEnvelope(event)">
+                        <img src="images/envelope-front.png" class="env-face" alt="Zarf Ön">
+                        <img src="images/envelope-back.png" class="env-face env-back" alt="Zarf Arka">
+                    </div>
+                </div>
+
+                <img src="images/envelope-open.png" id="envelope-open-view" alt="Açık Zarf">
+            </div>
+        </div>
+
+        <div class="click-hint" id="problem-click">TIKLA</div>
+        <button class="reset-btn" id="problem-reset" onclick="resetProblem(event)">BAŞA SAR</button>
+
+        <img src="images/avatar-problem.png" class="avatar" alt="Avatar">
+    </section>
+
+    <section id="solution-section" onclick="growMiddle(event)">
+        <button 
+            class="info-phone-btn" 
+            onclick="openInfo(event, this)" 
+            data-info="Bu bölümde masalı tamamen modernleştirmek, klasik yapıyı korumak veya Türk kültüründen beslenen yeni bir yorum oluşturmak gibi farklı yollar düşünüldü. Finalde geleneksel atmosferi koruyan ama karakter temsilini dönüştüren bir anlatı tercih edildi. Bu noktaya birçok farklı kullanıcı testi sonucu gelindi.">
+            <img src="images/tel.png" alt="Ek bilgi telefonu">
+        </button>
+
+        <h2 class="section-title">Olası Çözümler</h2>
+
+        <div class="polaroid-container">
+            <div class="polaroid-card" id="p1">
+                <img src="images/solution-1.png" alt="Çözüm 1">
+            </div>
+
+            <div class="polaroid-card" id="p2">
+                <img src="images/solution-2.png" alt="Çözüm 2">
+            </div>
+
+            <div class="polaroid-card" id="p3">
+                <img src="images/solution-3.png" alt="Çözüm 3">
+            </div>
+        </div>
+
+        <div class="click-hint" id="solution-click">TIKLA</div>
+        <button class="reset-btn" id="solution-reset" onclick="resetSolution(event)">BAŞA SAR</button>
+
+        <img src="images/avatar-solution.png" class="avatar" alt="Avatar">
+    </section>
+
+    <section id="risk-section" onclick="triggerRiskSequence(event)">
+        <button 
+            class="info-phone-btn" 
+            onclick="openInfo(event, this)" 
+            data-info="Toplumsal cinsiyet rollerini tersine çevirmek, alışılmış masal beklentilerinin dışına çıkıyordu. Bu yüzden anlatının çocuk yaş grubuna uygun, anlaşılır ve fazla didaktik olmayan bir dengede kalması gerekiyordu. Bir pedagog ile gerçekleştirdiğim birçok görüşmeyle bunu sağlama aldım.">
+            <img src="images/tel.png" alt="Ek bilgi telefonu">
+        </button>
+
+        <div class="red-flash" id="risk-flash"></div>
+
+        <div class="risk-flip-card">
+            <div class="risk-flip-inner" id="risk-inner">
+                <div class="risk-face risk-front">
+                    <img src="images/solution-2.png" alt="Seçilen Çözüm">
+                </div>
+
+                <div class="risk-face risk-back">
+                    <img src="images/burnt-polaroid.png" alt="Yanmış Polaroid">
+                </div>
+            </div>
+        </div>
+
+        <div class="risk-text text-block" id="r-text">
+            <h2 class="text-title">Riskler</h2>
+            <p class="text-body">Toplumsal cinsiyet rollerini tersine çevirmek, alışılmış beklentilerin dışına çıkıyordu. Çocuklara uygunluğunu kontrol etmem gerekiyordu.</p>
+        </div>
+
+        <div class="click-hint" id="risk-click">TIKLA</div>
+        <button class="reset-btn" id="risk-reset" onclick="resetRisk(event)">BAŞA SAR</button>
+
+        <img src="images/avatar-risk.png" class="avatar" alt="Avatar">
+    </section>
+
+    <section id="insight-section" onclick="turnOnLight(event)">
+        <button 
+            class="info-phone-btn" 
+            onclick="openInfo(event, this)" 
+            data-info="Araştırma ve tasarım sürecinde çocukların hikâyeye yalnızca olay örgüsüyle değil, karakterle kurdukları bağ üzerinden dahil olduklarını fark ettim. Bu yüzden Rapunzel’in daha aktif, özgüvenli ve yerel kültürle ilişkili bir karakter olması önemliydi.">
+            <img src="images/tel.png" alt="Ek bilgi telefonu">
+        </button>
+
+        <button id="light-btn">TIKLA</button>
+
+        <div class="flashlight-overlay" id="flashlight"></div>
+
+        <img src="images/insight-eye.png" id="insight-eye" alt="İçgörü Gözü">
+
+        <div class="insight-content text-block" id="i-content">
+            <h2 class="text-title">İçgörüler</h2>
+
+            <ul class="numbered-list">
+                <li>1- Çocuklar didaktik anlatılardan çok karakter odaklı hikâyelere bağlanıyor.</li>
+                <li>2- Yerel kültürel unsurlar aidiyet hissini artırıyor.</li>
+                <li>3- Güçlü kadın karakterlerin çocukların özgüven algısını olumlu etkileyebildiğini gördüm.</li>
+            </ul>
+        </div>
+
+        <div class="click-hint" id="insight-click">TIKLA</div>
+        <button class="reset-btn" id="insight-reset" onclick="resetInsight(event)">BAŞA SAR</button>
+
+        <img src="images/avatar-insight.png" class="avatar" alt="Avatar">
+    </section>
+
+    <section id="process-section">
+        <button 
+            class="info-phone-btn" 
+            onclick="openInfo(event, this)" 
+            data-info="Süreç boyunca hem yazılı anlatının çocuk yaş grubuna uygun olmasına hem de görsel dünyanın masal atmosferini taşımasına dikkat ettim. Modern ve geleneksel öğeleri aynı görsel dil içinde dengelemeye çalıştım.">
+            <img src="images/tel.png" alt="Ek bilgi telefonu">
+        </button>
+
+        <h2 class="section-title">Süreç ve Gelişim</h2>
+
+        <div class="process-gallery">
+            <div class="process-item">
+                <img src="images/process-1.png" alt="Süreç 1">
+                <div class="process-desc">
+                    <div class="process-num">1</div>
+                    Farklı renk ve çizim denemeleri yaptım.
+                </div>
+            </div>
+
+            <div class="process-item">
+                <img src="images/process-2.png" alt="Süreç 2">
+                <div class="process-desc">
+                    <div class="process-num">2</div>
+                    Karakterlerin ve renk paletinin tasarımlarının ilk hali. Görsel dilde modern ve geleneksel öğelerin dengelenmesi üzerine çalıştım.
+                </div>
+            </div>
+
+            <div class="process-item">
+                <img src="images/process-3.png" alt="Süreç 3">
+                <div class="process-desc">
+                    <div class="process-num">3</div>
+                    Final anlatı ve görsel dünya, çocuk yaş grubuna uygun sade bir dil ve kültürel motiflerle tamamlandı.
+                </div>
+            </div>
+        </div>
+
+        <img src="images/avatar-process.png" class="avatar" alt="Avatar">
+    </section>
+
+    <section id="features-section">
+        <button 
+            class="info-phone-btn" 
+            onclick="openInfo(event, this)" 
+            data-info="Kitapta yalnızca Rapunzel’i yeniden anlatmak değil, masalın görsel ve kültürel dünyasını da yeniden kurmak hedeflendi. Bu nedenle sade dil, güçlü karakter temsili ve Türk kültüründen gelen motifler birlikte kullanıldı.">
+            <img src="images/tel.png" alt="Ek bilgi telefonu">
+        </button>
+
+        <div class="features-list text-block" id="features-list">
+            <h2 class="text-title">Özellikler</h2>
+
+            <ul class="text-list">
+                <li class="feature-item" data-feature="culture">• Türk kültüründen beslenen yeniden yazılmış bir Rapunzel hikâyesi oluşturdum.</li>
+                <li class="feature-item" data-feature="language">• Çocuk yaş grubuna uygun sade anlatım dilini kurdum.</li>
+                <li class="feature-item" data-feature="perspective">• Geleneksel masal atmosferini korurken yeni bir bakış açısı sunmaya çabaladım.</li>
+                <li class="feature-item" data-feature="visual">• Kültürel motiflerle desteklenen görsel bir dünya yarattım.</li>
+            </ul>
+        </div>
+
+        <div class="mockup-group">
+            <img src="images/proje-kapak.png" id="current-mockup" alt="Kitap Mockup">
+
+            <div class="mockup-sidebar">
+                <img src="images/proje-kapak.png" class="thumb active-thumb" onclick="changeMockup('images/proje-kapak.png', this, [])" alt="Ana Kapak">
+                <img src="images/mockup-1.png" class="thumb" onclick="changeMockup('images/mockup-1.png', this, ['culture', 'language'])" alt="Mockup 1">
+                <img src="images/mockup-2.png" class="thumb" onclick="changeMockup('images/mockup-2.png', this, ['perspective'])" alt="Mockup 2">
+                <img src="images/mockup-3.png" class="thumb" onclick="changeMockup('images/mockup-3.png', this, ['visual'])" alt="Mockup 3">
+            </div>
+        </div>
+    </section>
+
+    <section id="thanks-section">
+        <div class="thanks-text text-block">
+            <div class="learned-box">
+                <h2 class="text-title">Ne öğrendim?</h2>
+                <p class="text-body">Bu proje bana, çocuklara yönelik bir tasarım yaparken hikâyenin dili kadar karakterin temsilinin ve görsel dünyanın tutarlılığının da önemli olduğunu gösterdi. Bir masalı yeniden uyarlarken yalnızca olayları değiştirmek değil, çocuğun karakterle kuracağı bağı, kültürel aidiyet hissini ve anlatının yaş grubuna uygunluğunu birlikte düşünmem gerektiğini öğrendim.</p>
+            </div>
+
+            <h2 class="text-title thanks-final-title">Buraya kadar geldiğin için teşekkür ederim.</h2>
+            <p class="text-body thanks-final-text">Umarım Rapunzel uyarlamamı beğenmişsindir.</p>
+        </div>
+
+        <img src="images/avatar-final.png" class="final-avatar" alt="Final Avatar">
+    </section>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        let isEnvVisible = false;
+        let isEnvOpened = false;
+        let isSolutionTriggered = false;
+        let isRiskTriggered = false;
+        let isLightTriggered = false;
+        let activeInfoButton = null;
+
+        function hideClick(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add("is-hidden");
+        }
+
+        function showClick(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove("is-hidden");
+        }
+
+        function showReset(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add("is-visible");
+        }
+
+        function hideReset(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove("is-visible");
+        }
+
+        function openInfo(event, button) {
+            event.stopPropagation();
+
+            const popup = document.getElementById("info-popup");
+            const popupText = document.getElementById("info-popup-text");
+
+            const samePhoneIsOpen = popup.classList.contains("is-visible") && activeInfoButton === button;
+
+            if (samePhoneIsOpen) {
+                closeInfo(event);
+                return;
+            }
+
+            activeInfoButton = button;
+            popupText.textContent = button.dataset.info;
+            popup.classList.add("is-visible");
+        }
+
+        function closeInfo(event) {
+            if (event) event.stopPropagation();
+
+            const popup = document.getElementById("info-popup");
+            popup.classList.remove("is-visible");
+            activeInfoButton = null;
+        }
+
+        window.addEventListener("scroll", () => {
+            closeInfo();
+        }, { passive: true });
+
+        function startEvaporation(event) {
+            if (event && event.target.closest(".reset-btn")) return;
+            if (event && event.target.closest(".info-phone-btn")) return;
+            if (isEnvVisible) return;
+
+            isEnvVisible = true;
+            showReset("problem-reset");
+
+            gsap.to("#q-wrap", { 
+                duration: 0.5, 
+                opacity: 0, 
+                filter: "blur(10px)", 
+                onComplete: () => {
+                    document.getElementById("q-wrap").style.display = "none";
+                    document.getElementById("envelope-stage").style.display = "block";
+
+                    gsap.fromTo("#env-wrapper", 
+                        { scale: 0 }, 
+                        { scale: 1, duration: 0.6, ease: "back.out(1.4)" }
+                    );
+                }
+            });
+        }
+
+        function openEnvelope(event) {
+            event.stopPropagation();
+
+            if (isEnvOpened) return;
+
+            isEnvOpened = true;
+            hideClick("problem-click");
+
+            const open = document.getElementById("envelope-open-view");
+            open.style.display = "block";
+
+            const tl = gsap.timeline();
+
+            tl.to("#env-wrapper", {
+                x: -280,
+                duration: 1,
+                ease: "power2.inOut"
+            })
+            .fromTo("#envelope-open-view", 
+                { 
+                    opacity: 0, 
+                    x: 0,
+                    scale: 0.96
+                },
+                { 
+                    opacity: 1, 
+                    x: 300, 
+                    scale: 1,
+                    duration: 1,
+                    ease: "power2.out"
+                },
+                "-=0.75"
+            );
+        }
+
+        function resetProblem(event) {
+            if (event) event.stopPropagation();
+
+            isEnvVisible = false;
+            isEnvOpened = false;
+
+            gsap.killTweensOf(["#q-wrap", "#env-wrapper", "#envelope-open-view"]);
+
+            const qWrap = document.getElementById("q-wrap");
+            const stage = document.getElementById("envelope-stage");
+            const open = document.getElementById("envelope-open-view");
+
+            qWrap.style.display = "block";
+            stage.style.display = "none";
+            open.style.display = "none";
+
+            gsap.set("#q-wrap", { opacity: 1, filter: "blur(0px)" });
+            gsap.set("#env-wrapper", { clearProps: "transform" });
+            gsap.set("#envelope-open-view", { opacity: 0, scale: 1, clearProps: "transform" });
+
+            closeInfo(event);
+            showClick("problem-click");
+            hideReset("problem-reset");
+        }
+
+        function growMiddle(event) {
+            if (event && event.target.closest(".reset-btn")) return;
+            if (event && event.target.closest(".info-phone-btn")) return;
+            if (isSolutionTriggered) return;
+
+            isSolutionTriggered = true;
+
+            document.getElementById("p2").classList.add("mid-grow");
+            document.getElementById("p1").classList.add("dim-others");
+            document.getElementById("p3").classList.add("dim-others");
+
+            hideClick("solution-click");
+            showReset("solution-reset");
+        }
+
+        function resetSolution(event) {
+            if (event) event.stopPropagation();
+
+            isSolutionTriggered = false;
+
+            document.getElementById("p1").classList.remove("dim-others");
+            document.getElementById("p2").classList.remove("mid-grow");
+            document.getElementById("p3").classList.remove("dim-others");
+
+            closeInfo(event);
+            showClick("solution-click");
+            hideReset("solution-reset");
+        }
+
+        function triggerRiskSequence(event) {
+            if (event && event.target.closest(".reset-btn")) return;
+            if (event && event.target.closest(".info-phone-btn")) return;
+            if (isRiskTriggered) return;
+
+            isRiskTriggered = true;
+
+            hideClick("risk-click");
+            showReset("risk-reset");
+
+            const tl = gsap.timeline();
+
+            tl.to("#risk-flash", { 
+                opacity: 1, 
+                width: "1200px", 
+                height: "1200px", 
+                duration: 0.8, 
+                ease: "power2.out" 
+            })
+            .to("#risk-inner", { 
+                rotationY: 180, 
+                duration: 1.8, 
+                ease: "expo.out" 
+            }, "-=0.4")
+            .to("#r-text", { 
+                opacity: 1, 
+                x: 0, 
+                duration: 1 
+            }, "-=1");
+        }
+
+        function resetRisk(event) {
+            if (event) event.stopPropagation();
+
+            isRiskTriggered = false;
+
+            gsap.killTweensOf(["#risk-flash", "#risk-inner", "#r-text"]);
+
+            gsap.set("#risk-flash", {
+                opacity: 0,
+                width: "10px",
+                height: "10px"
+            });
+
+            gsap.set("#risk-inner", {
+                rotationY: 0,
+                clearProps: "transform"
+            });
+
+            gsap.set("#r-text", {
+                opacity: 0,
+                x: 50
+            });
+
+            closeInfo(event);
+            showClick("risk-click");
+            hideReset("risk-reset");
+        }
+
+        function turnOnLight(event) {
+            if (event && event.target.closest(".reset-btn")) return;
+            if (event && event.target.closest(".info-phone-btn")) return;
+            if (isLightTriggered) return;
+
+            isLightTriggered = true;
+
+            hideClick("insight-click");
+            showReset("insight-reset");
+
+            const tl = gsap.timeline();
+
+            tl.to("#light-btn", { 
+                scale: 0, 
+                opacity: 0,
+                duration: 0.35
+            })
+            .to("#flashlight", { 
+                opacity: 1, 
+                duration: 0.6 
+            })
+            .to("#insight-eye", { 
+                opacity: 1, 
+                filter: "brightness(1.2)", 
+                duration: 1 
+            })
+            .to(["#insight-eye", "#flashlight"], { 
+                x: -250, 
+                duration: 1.5, 
+                ease: "power2.inOut" 
+            }, "+=0.3")
+            .to("#i-content", { 
+                opacity: 1, 
+                duration: 1 
+            }, "-=1");
+        }
+
+        function resetInsight(event) {
+            if (event) event.stopPropagation();
+
+            isLightTriggered = false;
+
+            gsap.killTweensOf(["#light-btn", "#flashlight", "#insight-eye", "#i-content"]);
+
+            gsap.set("#light-btn", {
+                scale: 1,
+                opacity: 1
+            });
+
+            gsap.set("#flashlight", {
+                opacity: 0,
+                x: 0
+            });
+
+            gsap.set("#insight-eye", {
+                opacity: 0,
+                x: 0,
+                filter: "brightness(0)"
+            });
+
+            gsap.set("#i-content", {
+                opacity: 0
+            });
+
+            closeInfo(event);
+            showClick("insight-click");
+            hideReset("insight-reset");
+        }
+
+        function setActiveFeatures(features = []) {
+            const featuresList = document.getElementById("features-list");
+            const items = document.querySelectorAll(".feature-item");
+
+            items.forEach(item => {
+                const itemFeature = item.dataset.feature;
+                item.classList.toggle("is-feature-active", features.includes(itemFeature));
+            });
+
+            featuresList.classList.toggle("has-active", features.length > 0);
+        }
+
+        function changeMockup(path, el, features = []) {
+            const main = document.getElementById("current-mockup");
+
+            document.querySelectorAll(".thumb").forEach(t => {
+                t.classList.remove("active-thumb");
+            });
+
+            el.classList.add("active-thumb");
+            setActiveFeatures(features);
+
+            gsap.to(main, { 
+                opacity: 0, 
+                duration: 0.2, 
+                onComplete: () => {
+                    main.src = path;
+
+                    gsap.to(main, { 
+                        opacity: 1, 
+                        duration: 0.4 
+                    });
+                }
+            });
+        }
+
+        gsap.utils.toArray(".avatar").forEach(av => {
+            gsap.from(av, { 
+                scrollTrigger: { 
+                    trigger: av.parentElement, 
+                    start: "top center" 
+                }, 
+                x: 50, 
+                opacity: 0, 
+                duration: 1 
+            });
+        });
+    </script>
+
+</body>
+</html>
